@@ -25,6 +25,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleRegistry
 import com.ddx.compose.ui.theme.ComposeTheme
 import com.ddx.compose.widget.WidgetActivity
 
@@ -38,15 +41,16 @@ class MainActivity : ComponentActivity() {
                 Surface(modifier = Modifier.fillMaxSize()) {
                     Column {
                         Greeting("Hello World!")
-                        CustomButton(name = "自定义组件",
-                            intent = Intent(LocalContext.current,WidgetActivity::class.java))
+                        CustomButton(
+                            name = "自定义组件",
+                            intent = Intent(LocalContext.current, WidgetActivity::class.java)
+                        )
                     }
 
                 }
             }
         }
     }
-
     @Composable
     fun Greeting(name: String) {
         return Row(modifier = Modifier.padding(20.dp)) {
@@ -65,6 +69,5 @@ class MainActivity : ComponentActivity() {
             Text(text = name)
         }
     }
-
 
 }
