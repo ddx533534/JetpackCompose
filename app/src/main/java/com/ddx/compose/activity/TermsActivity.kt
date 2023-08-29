@@ -35,6 +35,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -56,9 +57,9 @@ import kotlinx.coroutines.selects.select
 class TermsActivity : ComponentActivity() {
     private val TAG = "TermModel";
     private val list = mutableStateListOf<Term>();
-    private val delete_list = mutableListOf(list.size);
     private val termModel by viewModels<TermModel>()
-    var showDeleteButton = mutableStateOf(false);
+    private val deleteList = mutableStateListOf<Int>();
+    private var showDeleteButton = mutableStateOf(false);
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +85,9 @@ class TermsActivity : ComponentActivity() {
 
     }
 
+    /**
+     * 悬浮按钮，用来添加或者删除元素
+     */
     @Composable
     fun FloatingButton() {
         Column(
@@ -94,8 +98,11 @@ class TermsActivity : ComponentActivity() {
                 .padding(end = 16.dp, bottom = 16.dp)
         ) {
             FloatingActionButton(onClick = {
-                //移除列表最后一个数据
-                termModel.deleteLastTerm()
+                Log.d(TAG, "FloatingActionButton-delete: $deleteList")
+                if (deleteList.isNotEmpty()) {
+                    termModel.deleteTerms(deleteList)
+                    deleteList.clear()
+                }
             }) {
                 Icon(
                     imageVector = Icons.Default.Clear,
@@ -119,7 +126,6 @@ class TermsActivity : ComponentActivity() {
     @Composable
     fun Main_Layout() {
         val lists by termModel.termListLiveData.observeAsState(listOf())
-
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -137,6 +143,9 @@ class TermsActivity : ComponentActivity() {
         }
     }
 
+    /**
+     * 列表吸顶视图
+     */
     @Composable
     fun header() {
         Column(
@@ -156,6 +165,9 @@ class TermsActivity : ComponentActivity() {
         }
     }
 
+    /**
+     * 列表 item 视图
+     */
     @Composable
     fun item(index: Int, term: Term) {
         var showDetail by rememberSaveable {
@@ -166,7 +178,10 @@ class TermsActivity : ComponentActivity() {
             modifier = Modifier
                 .pointerInput(index) {
                     detectTapGestures(
-                        onLongPress = { showDeleteButton.value = !showDeleteButton.value },
+                        onLongPress = {
+                            showDeleteButton.value = !showDeleteButton.value
+                            deleteList.clear()
+                        },
                         onTap = { showDetail = !showDetail }
                     )
                 }
@@ -199,6 +214,9 @@ class TermsActivity : ComponentActivity() {
 
     }
 
+    /**
+     * item 单选按钮，可以分享或者删除
+     */
     @Composable
     private fun Item_choose(index: Int) {
         Row(
@@ -209,14 +227,13 @@ class TermsActivity : ComponentActivity() {
                 .wrapContentHeight()
         ) {
             Checkbox(
-                checked = false, onCheckedChange = { checked ->
-                    check(checked)
+                checked = deleteList.contains(index), onCheckedChange = { checked ->
                     if (checked) {
-                        delete_list[index] = 1
+                        deleteList.add(index)
                     } else {
-                        delete_list[index] = 0
+                        deleteList.remove(index)
                     }
-
+                    Log.d(TAG, "onCheckedChange: ${deleteList.toList()}")
                 }, modifier = Modifier
                     .size(20.dp)
 
@@ -224,6 +241,9 @@ class TermsActivity : ComponentActivity() {
         }
     }
 
+    /**
+     * item 展开的具体内容
+     */
     @Composable
     private fun Item_content(content: String) {
         Surface(

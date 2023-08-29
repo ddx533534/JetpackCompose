@@ -2,10 +2,12 @@ package com.ddx.compose.model
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import java.util.function.Predicate
 
 class TermModel : ViewModel() {
     private val TAG: String = "TermModel"
@@ -14,7 +16,7 @@ class TermModel : ViewModel() {
     private val repository: Repository = ServiceLocator.provideRepository()
 
     // term 列表，可变列表≠可变状态列表，前者只是列表元素可变，但后者元素和状态均可变，用于自动更新
-    private var termList = mutableStateListOf<Term>()
+    private val termList = mutableStateListOf<Term>()
 
     // 对应 termList 的 liveData
     val termListLiveData: MutableLiveData<List<Term>> = MutableLiveData()
@@ -53,11 +55,27 @@ class TermModel : ViewModel() {
     }
 
     fun deleteTerm(position: Int) {
-        Log.d(TAG, "TermModel deleteTerm")
+        Log.d(TAG, "TermModel deleteTerm$position")
         if (position >= termList.count()) {
             throw Exception("position illegal!")
         }
         termList.removeAt(position)
+        // 删除数据
+        termListLiveData.postValue(termList)
+    }
+
+    fun deleteTerms(list: List<Int>) {
+        var a = listOf<Int>();
+        Log.d(TAG, "TermModel deleteTerm${list.toList()}")
+        val ll = termList.filterIndexed { index, _ ->
+            !list.contains(index)
+        }
+        termList.clear()
+        termList.addAll(ll)
+        Log.d(TAG, "remain elements:")
+        termList.forEach {
+            Log.d(TAG, it.title)
+        }
         // 删除数据
         termListLiveData.postValue(termList)
     }
