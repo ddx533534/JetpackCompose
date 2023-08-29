@@ -11,10 +11,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.unit.dp
+import kotlin.random.Random
 
 object Pie {
     @Composable
-    fun CustomPie() {
+    fun CustomPie(list: List<Float>) {
+
         Box(
             modifier = Modifier
                 .size(200.dp)
@@ -27,11 +29,27 @@ object Pie {
                 val path = Path()
 //                    path.arcTo(Rect(), 0f, 50f, false)
                 val bounds = path.getBounds()
-
-                drawArc(Color.Red, 0f, 100f, true)
-                drawArc(Color.Yellow, 100f, 100f, true)
-                drawArc(Color.Green, 200f, 100f, true)
-                drawArc(Color.Blue, 300f, 60f, true)
+                var count = 0f
+                var colorList = listOf(Color.Red, Color.Yellow, Color.Green, Color.Blue)
+                list.forEach {
+                    count += it
+                }
+                var startAngle = 0f
+                var sweepAngle = 0f
+                list.forEachIndexed { index, it ->
+                    if (index == list.count() - 1) {
+                        drawArc(
+                            colorList[index.rem(colorList.count())],
+                            startAngle,
+                            360 - startAngle,
+                            true
+                        )
+                        return@forEachIndexed
+                    }
+                    sweepAngle = it.div(count).times(360f)
+                    drawArc(colorList[index.rem(colorList.count())], startAngle, sweepAngle, true)
+                    startAngle += sweepAngle
+                }
             }
             Canvas(
                 modifier = Modifier

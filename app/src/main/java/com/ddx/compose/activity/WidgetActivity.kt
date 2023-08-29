@@ -1,6 +1,5 @@
-package com.ddx.compose.widget
+package com.ddx.compose.activity
 
-import android.graphics.RectF
 import android.os.Bundle
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
@@ -8,12 +7,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -21,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -54,7 +50,7 @@ class WidgetActivity : ComponentActivity() {
             Scaffold(
                 content = {
                     Box {
-                        Column(Modifier.horizontalScroll(rememberScrollState())) {
+                        Column(Modifier.verticalScroll(rememberScrollState())) {
                             SubTitle(title = "自定义 tab")
                             CustomTab()
                             SubTitle(title = "自定义 layout")
@@ -387,7 +383,7 @@ class WidgetActivity : ComponentActivity() {
 
                 drawPath(path, Color.Black, 1f, Stroke(1f))
             }
-            CustomPie()
+            CustomPie(listOf(1f,2f,4f,3f,5f))
 
         }
     }
