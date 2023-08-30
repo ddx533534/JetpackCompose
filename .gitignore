@@ -12,5 +12,8 @@
 /captures
 .externalNativeBuild
 .cxx
-/.idea
+.idea
+*.ipr
+*.iws
+out
 local.properties
