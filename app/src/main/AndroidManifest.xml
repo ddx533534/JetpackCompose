@@ -13,6 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Compose">
         <activity
+            android:name=".activity.BaseActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.TermsActivity"
             android:exported="false" />
         <activity

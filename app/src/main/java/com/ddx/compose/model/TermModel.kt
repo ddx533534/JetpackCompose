@@ -2,12 +2,10 @@ package com.ddx.compose.model
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import java.util.function.Predicate
 
 class TermModel : ViewModel() {
     private val TAG: String = "TermModel"
@@ -19,7 +17,7 @@ class TermModel : ViewModel() {
     private val termList = mutableStateListOf<Term>()
 
     // 对应 termList 的 liveData
-    val termListLiveData: MutableLiveData<List<Term>> = MutableLiveData()
+    private val termListLiveData: MutableLiveData<List<Term>> = MutableLiveData()
 
     // 对应选中term 的 liveData
     private val termLiveData: MutableLiveData<Term> = MutableLiveData()
@@ -40,6 +38,9 @@ class TermModel : ViewModel() {
         }
     }
 
+    fun getTermLiveData(): MutableLiveData<List<Term>> {
+        return termListLiveData
+    }
 
     fun initSelectedTerm(position: Int) {
         Log.d(TAG, "TermModel initSelectedTerm")
@@ -64,18 +65,13 @@ class TermModel : ViewModel() {
         termListLiveData.postValue(termList)
     }
 
-    fun deleteTerms(list: List<Int>) {
-        var a = listOf<Int>();
+    fun deleteTermsWithIndex(list: List<Int>) {
         Log.d(TAG, "TermModel deleteTerm${list.toList()}")
         val ll = termList.filterIndexed { index, _ ->
             !list.contains(index)
         }
         termList.clear()
         termList.addAll(ll)
-        Log.d(TAG, "remain elements:")
-        termList.forEach {
-            Log.d(TAG, it.title)
-        }
         // 删除数据
         termListLiveData.postValue(termList)
     }

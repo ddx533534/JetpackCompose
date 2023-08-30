@@ -39,38 +39,40 @@ import com.ddx.compose.widget.Pie.CustomPie
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.imageloading.ImageLoadState
 
-class WidgetActivity : ComponentActivity() {
+class WidgetActivity : BaseActivity() {
 
     private val tabs = listOf("OKR", "Android", "Language");
     private val items = listOf("112312", "112312", "112312", "112312", "112312", "112312");
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            Scaffold(
-                content = {
-                    Box {
-                        Column(Modifier.verticalScroll(rememberScrollState())) {
-                            SubTitle(title = "自定义 tab")
-                            CustomTab()
-                            SubTitle(title = "自定义 layout")
-                            CustomLayout()
-                            SubTitle(title = "button")
-                            HelloButton()
+    }
+
+    @Composable
+    override fun setContent() {
+        Scaffold(
+            content = {
+                Box {
+                    Column(Modifier.verticalScroll(rememberScrollState())) {
+                        SubTitle(title = "自定义 tab")
+                        CustomTab()
+                        SubTitle(title = "自定义 layout")
+                        CustomLayout()
+                        SubTitle(title = "button")
+                        HelloButton()
 //                        SubTitle(title = "列表")
 //                        CustomScroll()
-                            SubTitle(title = "文本")
-                            CustomText()
-                            SubTitle(title = "图片")
-                            CustomPicture()
-                            SubTitle(title = "自定义 Canvas")
-                            CustomCanvas()
-                        }
-                        hair()
+                        SubTitle(title = "文本")
+                        CustomText()
+                        SubTitle(title = "图片")
+                        CustomPicture()
+                        SubTitle(title = "自定义 Canvas")
+                        CustomCanvas()
                     }
-                },
-            )
-        }
+                    hair()
+                }
+            },
+        )
     }
 
 
@@ -352,12 +354,15 @@ class WidgetActivity : ComponentActivity() {
                                     .align(Alignment.Center)
                             )
                         }
+
                         is ImageLoadState.Error -> {
                             Toast.makeText(LocalContext.current, "加载失败!", LENGTH_LONG).show()
                         }
+
                         is ImageLoadState.Success -> {
                             Toast.makeText(LocalContext.current, "加载成功!", LENGTH_LONG).show()
                         }
+
                         else -> {
                             //do nothing
                         }
@@ -383,7 +388,7 @@ class WidgetActivity : ComponentActivity() {
 
                 drawPath(path, Color.Black, 1f, Stroke(1f))
             }
-            CustomPie(listOf(1f,2f,4f,3f,5f))
+            CustomPie(listOf(1f, 2f, 4f, 3f, 5f))
 
         }
     }
@@ -436,6 +441,10 @@ class WidgetActivity : ComponentActivity() {
                 }
         ) {
         }
+    }
+
+    override fun getPageName(): String {
+        return "测试页面"
     }
 
 }

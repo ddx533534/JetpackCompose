@@ -7,6 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,6 +31,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -43,13 +45,12 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ddx.compose.model.Term
 import com.ddx.compose.model.TermModel
 
-class TermsActivity : ComponentActivity() {
+class TermsActivity : BaseActivity() {
     private val TAG = "TermModel";
     private val list = mutableStateListOf<Term>();
     private val termModel by viewModels<TermModel>()
@@ -59,9 +60,11 @@ class TermsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initData()
-        setContent {
-            Content()
-        }
+    }
+
+    @Composable
+    override fun setContent() {
+        Content()
     }
 
     private fun initData() {
@@ -94,15 +97,13 @@ class TermsActivity : ComponentActivity() {
             FloatingActionButton(onClick = {
                 Log.d(TAG, "FloatingActionButton-delete: $deleteList")
                 if (deleteList.isNotEmpty()) {
-                    termModel.deleteTerms(deleteList)
+                    termModel.deleteTermsWithIndex(deleteList)
                     deleteList.clear()
                 }
             }) {
                 Icon(
                     imageVector = Icons.Default.Clear,
-                    contentDescription = null,
-                    Modifier.background(Color.Red),
-                    tint = Color.White
+                    contentDescription = null
                 )
             }
             FloatingActionButton(onClick = {
@@ -118,9 +119,8 @@ class TermsActivity : ComponentActivity() {
 
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
-    @Preview
     fun Main_Layout() {
-//        val list by termModel.termListLiveData.observeAsState(listOf())
+        val list by termModel.getTermLiveData().observeAsState(listOf())
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -176,8 +176,7 @@ class TermsActivity : ComponentActivity() {
                         onLongPress = {
                             showDeleteButton.value = !showDeleteButton.value
                             deleteList.clear()
-                        },
-                        onTap = { showDetail = !showDetail }
+                        }
                     )
                 }
         ) {
@@ -196,7 +195,7 @@ class TermsActivity : ComponentActivity() {
                         withStyle(SpanStyle(fontSize = 15.sp, fontWeight = FontWeight.Normal)) {
                             append("(${term.subTitle})")
                         }
-                    })
+                    }, modifier = Modifier.clickable(onClick = { showDetail = !showDetail }))
                     if (showDeleteButton.value) {
                         Item_choose(index)
                     }
@@ -261,5 +260,9 @@ class TermsActivity : ComponentActivity() {
             }
         }
 
+    }
+
+    override fun getPageName(): String {
+        return "术语页面"
     }
 }

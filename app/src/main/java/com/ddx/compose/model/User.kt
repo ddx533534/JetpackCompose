@@ -1,3 +1,12 @@
 package com.ddx.compose.model
 
-data class User(val name: String, var id: String)
+import java.io.Serializable
+
+data class User(var username: String, var status: UserStatus, var expireTime: Int) :
+    Serializable
+
+enum class UserStatus{
+    ONLINE,
+    OFFLINE,
+    UNKNOWN
+}
