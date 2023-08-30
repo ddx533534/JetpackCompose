@@ -75,7 +75,6 @@ class TermsActivity : ComponentActivity() {
         }
     }
 
-    @Preview
     @Composable
     fun Content() {
         Box {
@@ -124,19 +123,20 @@ class TermsActivity : ComponentActivity() {
 
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
+    @Preview
     fun Main_Layout() {
-        val lists by termModel.termListLiveData.observeAsState(listOf())
+//        val list by termModel.termListLiveData.observeAsState(listOf())
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(0xDE, 0xDE, 0xDE, 0xFF)),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Log.d(TAG, "触发绘制" + "size：" + lists.count())
+            Log.d(TAG, "触发绘制" + "size：" + list.count())
             stickyHeader {
                 header()
             }
-            itemsIndexed(lists) { index, term ->
+            itemsIndexed(list) { index, term ->
                 item(index, term)
             }
 
