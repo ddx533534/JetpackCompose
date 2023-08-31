@@ -9,3 +9,6 @@ data class LoginResult(var code: Int, var user: User) :
 
 data class RegisterResult(var code: Int, var user: User) :
     Serializable
+
+data class MainResult(var code: Int) :
+    Serializable

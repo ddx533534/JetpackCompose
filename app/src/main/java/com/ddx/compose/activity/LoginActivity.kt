@@ -1,6 +1,7 @@
 package com.ddx.compose.activity
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -30,12 +31,18 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ddx.compose.model.User
 import com.ddx.compose.model.UserModel
 import com.ddx.compose.model.UserStatus
+import org.json.JSONObject
+import java.security.Timestamp
+import java.sql.Time
+import java.util.Date
 
 class LoginActivity : BaseActivity() {
     private val userModel: UserModel by viewModels()
@@ -64,6 +71,13 @@ class LoginActivity : BaseActivity() {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             if (curUser?.status == UserStatus.ONLINE) {
+                Text(
+                    text = "欢迎${curUser?.username}登录！过期时间${
+                        curUser?.expireTime?.let {
+                            Date(it).toString()
+                        }
+                    }!", fontSize = 20.sp, fontWeight = FontWeight.Bold
+                )
                 return@Column
             }
             TextField(
@@ -136,8 +150,10 @@ class LoginActivity : BaseActivity() {
                 Button(onClick = { userModel.login(username, password) }) {
                     Text(text = "Login")
                 }
+                Button(onClick = { userModel.testMain() }) {
+                    Text(text = "TestMain")
+                }
             }
-
         }
     }
 

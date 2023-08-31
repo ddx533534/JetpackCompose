@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ddx.compose.base.LoginCode
 import com.ddx.compose.network.LoginResult
+import com.ddx.compose.network.MainResult
 import com.ddx.compose.network.Network
 import com.ddx.compose.network.RegisterResult
 import retrofit2.Call
@@ -39,34 +40,54 @@ class UserModel : ViewModel() {
             })
     }
 
+    fun testMain() {
+        Log.d("UserModel", "开始测试 main")
+
+        Network.service.main("ddx", "123")
+            .enqueue(object : Callback<MainResult> {
+                override fun onResponse(
+                    call: Call<MainResult>,
+                    response: Response<MainResult>
+                ) {
+                    response.body()?.let {
+                        Log.d("UserModel正常", "code:${it.code}")
+                    }
+                }
+
+                override fun onFailure(call: Call<MainResult>, t: Throwable) {
+                    Log.d("UserModel异常", t.message.toString())
+                }
+
+            })
+    }
+
     fun login(username: String, password: String) {
         Log.d("UserModel", "开始进入登录")
-        suspend {
-            Log.d("UserModel", "开始登录")
-            Network.service.login(username, password)
-                .enqueue(object : Callback<LoginResult> {
-                    override fun onResponse(
-                        call: Call<LoginResult>,
-                        response: Response<LoginResult>
-                    ) {
-                        response.body()?.let {
-                            Log.d("UserModel", "登录成功")
-                            if (it.code == LoginCode.SUCCESS) {
-                                curUser.value = it.user
-                                userLiveData.postValue(curUser.value)
-                            }
+
+        Log.d("UserModel", "开始登录")
+        Network.service.login(username, password)
+            .enqueue(object : Callback<LoginResult> {
+                override fun onResponse(
+                    call: Call<LoginResult>,
+                    response: Response<LoginResult>
+                ) {
+                    response.body()?.let {
+                        Log.d("UserModel", it.toString())
+                        if (it.code == LoginCode.SUCCESS) {
+                            curUser.value = it.user
+                            userLiveData.postValue(curUser.value)
                         }
                     }
+                }
 
-                    override fun onFailure(call: Call<LoginResult>, t: Throwable) {
-                        Log.d("UserModel", "登录失败")
-                        curUser.value.username = ""
-                        curUser.value.status = UserStatus.OFFLINE
-                        curUser.value.expireTime = 0
-                        userLiveData.postValue(curUser.value)
-                    }
+                override fun onFailure(call: Call<LoginResult>, t: Throwable) {
+                    Log.d("UserModel", "登录失败")
+                    curUser.value.username = ""
+                    curUser.value.status = UserStatus.OFFLINE
+                    curUser.value.expireTime = 0
+                    userLiveData.postValue(curUser.value)
+                }
 
-                })
-        }
+            })
     }
 }

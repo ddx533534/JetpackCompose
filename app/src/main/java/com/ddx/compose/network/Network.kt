@@ -1,10 +1,13 @@
 package com.ddx.compose.network
 
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+
 
 open class Network {
     companion object {
@@ -29,10 +32,13 @@ open class Network {
             .retryOnConnectionFailure(false)
 
 
+        private var gson: Gson = GsonBuilder()
+            .setLenient()
+            .create()
         // 创建Retrofit
         private var retrofit: Retrofit = Retrofit.Builder()
             .baseUrl(NETWORK_URL)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .client(client.build())
             .build()
 
