@@ -19,8 +19,8 @@ interface RequestService {
     ): Call<LoginResult>
 
     @POST(value = "/user/register")
-    fun register(ad
-        @Query("user_name") username: String,
+    fun register(
+        @Query("username") username: String,
         @Query("first_password") firstPassword: String,
         @Query("second_password") secondPassword: String,
     ): Call<RegisterResult>

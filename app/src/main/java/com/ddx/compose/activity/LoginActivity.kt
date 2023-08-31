@@ -79,79 +79,80 @@ class LoginActivity : BaseActivity() {
                     }!", fontSize = 20.sp, fontWeight = FontWeight.Bold
                 )
                 return@Column
-            }
-            TextField(
-                value = username,
-                onValueChange = {
-                    username = it
-                },
-                singleLine = true,
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Person,
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp)
-                    )
-                },
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Clear,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(20.dp)
-                            .clickable(onClick = { username = "" })
-                    )
-                },
+            } else {
+                TextField(
+                    value = username,
+                    onValueChange = {
+                        username = it
+                    },
+                    singleLine = true,
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Filled.Person,
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    },
+                    trailingIcon = {
+                        Icon(
+                            imageVector = Icons.Filled.Clear,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(20.dp)
+                                .clickable(onClick = { username = "" })
+                        )
+                    },
 
-                modifier = Modifier
-                    .wrapContentHeight()
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-            )
-            Column(modifier = Modifier.height(10.dp)) {}
-            TextField(
-                value = password,
-                onValueChange = {
-                    password = it
-                },
-                singleLine = true,
+                    modifier = Modifier
+                        .wrapContentHeight()
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp)
+                )
+                Column(modifier = Modifier.height(10.dp)) {}
+                TextField(
+                    value = password,
+                    onValueChange = {
+                        password = it
+                    },
+                    singleLine = true,
 
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Lock,
-                        contentDescription = null,
-                        modifier = Modifier.size(20.dp)
-                    )
-                },
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Filled.Clear,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(20.dp)
-                            .clickable(onClick = { password = "" })
-                    )
-                },
-                modifier = Modifier
-                    .wrapContentHeight()
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp),
-                visualTransformation = PasswordVisualTransformation()
-            )
-            Column(modifier = Modifier.height(10.dp)) {}
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-            ) {
-                Button(onClick = { }) {
-                    Text(text = "Register")
-                }
-                Button(onClick = { userModel.login(username, password) }) {
-                    Text(text = "Login")
-                }
-                Button(onClick = { userModel.testMain() }) {
-                    Text(text = "TestMain")
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Filled.Lock,
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp)
+                        )
+                    },
+                    trailingIcon = {
+                        Icon(
+                            imageVector = Icons.Filled.Clear,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(20.dp)
+                                .clickable(onClick = { password = "" })
+                        )
+                    },
+                    modifier = Modifier
+                        .wrapContentHeight()
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp),
+                    visualTransformation = PasswordVisualTransformation()
+                )
+                Column(modifier = Modifier.height(10.dp)) {}
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp)
+                ) {
+                    Button(onClick = { }) {
+                        Text(text = "Register")
+                    }
+                    Button(onClick = { userModel.login(username, password) }) {
+                        Text(text = "Login")
+                    }
+                    Button(onClick = { userModel.testMain() }) {
+                        Text(text = "TestMain")
+                    }
                 }
             }
         }
